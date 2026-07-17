@@ -6,12 +6,12 @@
   "scripts": {
     "dev": "vite --host 0.0.0.0",
     "build": "vite build",
+    "build:gh-pages": "vite build --base=/Saerom_attendance_management/",
     "preview": "vite preview",
     "format": "oxfmt",
-    "predeploy": "npm run build",
-    "deploy": "gh-pages -d build"
+    "deploy": "npm run build:gh-pages && gh-pages -d dist"
   },
-  "homepage":"https://lee-soonjae.github.io/Saerom_attendance_management/"
+  "homepage": "https://lee-soonjae.github.io/Saerom_attendance_management/",
   "dependencies": {
     "firebase": "^12.16.0",
     "lucide-react": "^1.24.0",
