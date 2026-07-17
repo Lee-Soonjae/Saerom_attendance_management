@@ -1,0 +1,10 @@
+{
+  "description": "Streamline attendance management for kindergarten teachers with real-time tracking, detailed dashboards, and easy data export for enhanced communication and oversight.",
+  "robots": {
+    "index": false
+  },
+  "accessibility": {
+    "addBypassLinks": false,
+    "ignoreReducedMotion": false
+  }
+}
