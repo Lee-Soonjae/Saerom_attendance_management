@@ -39,7 +39,7 @@ import {
   addStudentDoc,
   removeStudentDoc,
   addClassDoc,
-  removeClassDoc,
+  removeClassCascade,
   importRosterDoc,
 } from "./firestoreApi";
 import type {
@@ -231,7 +231,7 @@ function LoginScreen({
     if (!editingClass) return;
     if (
       confirm(
-        `"${editingClass.name}" 반을 삭제하시겠습니까?\n원아 명단과 출석 기록은 남지만 더 이상 이 반으로 연결되지 않습니다.`,
+        `"${editingClass.name}" 반을 삭제하시겠습니까?\n이 반에 속한 원아 명단과 출석 기록도 모두 함께 삭제됩니다.`,
       )
     ) {
       onDeleteClass(editingClass.id);
@@ -2230,11 +2230,13 @@ export default function App() {
 
   function handleRemoveClass(id: string) {
     setClasses((prev) => prev.filter((c) => c.id !== id));
+    setStudents((prev) => prev.filter((s) => s.classId !== id));
+    setAttendance((prev) => prev.filter((a) => a.classId !== id));
     if (activeClassId === id) {
       localStorage.removeItem(ACTIVE_CLASS_KEY);
       setActiveClassId(null);
     }
-    if (firebaseEnabled) removeClassDoc(id).catch(console.error);
+    if (firebaseEnabled) removeClassCascade(id).catch(console.error);
   }
 
   // 엑셀 명단 업로드: 열 하나 = 반 하나, 그 열의 셀들 = 원아 이름. 같은 이름의 반이 이미

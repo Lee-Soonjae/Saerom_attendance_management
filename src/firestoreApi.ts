@@ -32,6 +32,24 @@ export async function removeClassDoc(id: string) {
   await deleteDoc(doc(requireDb(), 'classes', id))
 }
 
+// 반 삭제 시 그 반 소속 원아/출석 기록까지 같이 지운다 — 안 지우면 classId가 더 이상
+// 존재하지 않는 반을 가리키는 "고아" 문서로 DB에 그대로 남는다.
+export async function removeClassCascade(id: string) {
+  const database = requireDb()
+  const [studentsSnap, attendanceSnap] = await Promise.all([
+    getDocs(query(collection(database, 'students'), where('classId', '==', id))),
+    getDocs(query(collection(database, 'attendance'), where('classId', '==', id))),
+  ])
+  const refs = [...studentsSnap.docs, ...attendanceSnap.docs].map(d => d.ref)
+  refs.push(doc(database, 'classes', id))
+
+  for (let i = 0; i < refs.length; i += 450) {
+    const batch = writeBatch(database)
+    refs.slice(i, i + 450).forEach(ref => batch.delete(ref))
+    await batch.commit()
+  }
+}
+
 // classId로 서버에서 필터링해서 구독한다 — 규칙이 이걸 요구하는 건 아니고(완전 오픈),
 // 화면이 애초에 반 하나씩만 보여주니 굳이 다른 반 데이터까지 다운로드 안 하려는 최적화.
 // classId === 'all'(전체보기)일 때만 where 없이 전체를 구독한다.
