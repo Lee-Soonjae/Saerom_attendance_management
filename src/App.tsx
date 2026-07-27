@@ -411,7 +411,9 @@ function LoginScreen({
                     등록된 반이 없습니다. 위에서 반을 추가해주세요
                   </div>
                 )}
-                {classes.map((cls) => (
+                {[...classes]
+                  .sort((a, b) => a.name.localeCompare(b.name, "ko"))
+                  .map((cls) => (
                   <div
                     key={cls.id}
                     className={`flex items-center gap-3 p-4 rounded-xl border-2 transition-all ${
@@ -537,7 +539,9 @@ function DashboardScreen({
 
   // 전체보기일 때만 필요한 반별 분해 — classes를 직접 순회해서 반마다 오늘 현황을 다시 집계한다.
   const classStats = isOverview
-    ? classes.map((cls) => {
+    ? [...classes]
+        .sort((a, b) => a.name.localeCompare(b.name, "ko"))
+        .map((cls) => {
         const classStudents = students.filter((s) => s.classId === cls.id);
         const recs = todayRecs.filter((r) =>
           classStudents.some((s) => s.id === r.studentId),

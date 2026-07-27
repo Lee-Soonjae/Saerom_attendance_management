@@ -1,16 +1,18 @@
 export type AttendanceStatus = 'present' | 'absent' | 'late' | 'pending'
 
 export type AbsenceReason =
+  | 'home_care'
   | 'sick'
-  | 'family_trip'
-  | 'personal'
+  | 'overseas_trip'
+  | 'jeju_trip'
   | 'no_contact'
   | 'other'
 
 export const ABSENCE_REASON_LABELS: Record<AbsenceReason, string> = {
+  home_care: '가정돌봄',
   sick: '병결',
-  family_trip: '가족여행',
-  personal: '개인사정',
+  overseas_trip: '해외여행',
+  jeju_trip: '제주여행',
   no_contact: '연락안됨',
   other: '기타',
 }
